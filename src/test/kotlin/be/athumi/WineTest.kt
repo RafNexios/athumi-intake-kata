@@ -7,6 +7,14 @@ import kotlin.test.assertEquals
 
 class WineTest {
 
+    val defaultPriceIncrease = 1
+    val defaultPriceDecrease = 1
+    val minimumPrice = 0
+    val maximumPrice = 100
+
+    val eventWinePriceIncreaseBetween2And7YearsExpirationDate = 2
+    val eventWinePriceIncreaseLessOrEqual2YearsExpirationDate = 4
+
     @Test
     fun `tasting or testing wine`() {
         assertThat(Wine("name", 0, 0)).isNotNull
@@ -30,9 +38,10 @@ class WineTest {
         val shop = WineShop(listOf(Wine("Random Wine", startingPrice, expirationTime)))
 
         shop.next()
-        assertEquals(expirationTime - 1, shop.items[0].expiresInYears);
+        assertEquals(expirationTime - 1, shop.items[0].expiresInYears)
+
         shop.next()
-        assertEquals(expirationTime - 2, shop.items[0].expiresInYears);
+        assertEquals(expirationTime - 2, shop.items[0].expiresInYears)
     }
 
     @Test
@@ -40,10 +49,14 @@ class WineTest {
         val startingPrice = 10
         val expirationTime = 10
         val shop = WineShop(listOf(Wine("Random Wine", startingPrice, expirationTime)))
+
         shop.next()
-        assertEquals(startingPrice - 1, shop.items[0].price);
+        var currentExpectedPrice = startingPrice - defaultPriceDecrease
+        assertEquals(currentExpectedPrice, shop.items[0].price)
+
         shop.next()
-        assertEquals(startingPrice - 2, shop.items[0].price);
+        currentExpectedPrice -= defaultPriceDecrease
+        assertEquals(currentExpectedPrice, shop.items[0].price)
     }
 
     @Test
@@ -51,21 +64,27 @@ class WineTest {
         val startingPrice = 10
         val expirationTime = 0
         val shop = WineShop(listOf(Wine("Random Wine", startingPrice, expirationTime)))
+
         shop.next()
-        assertEquals(startingPrice - 2, shop.items[0].price);
+        var currentExpectedPrice = startingPrice - (2 * defaultPriceDecrease)
+        assertEquals(currentExpectedPrice, shop.items[0].price)
+
         shop.next()
-        assertEquals(startingPrice - 4, shop.items[0].price);
+        currentExpectedPrice -= (2 * defaultPriceDecrease)
+        assertEquals(currentExpectedPrice, shop.items[0].price)
     }
 
     @Test
-    fun `price should never go below zero`() {
-        val startingPrice = 0
+    fun `price should never go below minimum price`() {
+        val startingPrice = minimumPrice
         val expirationTime = 10
         val shop = WineShop(listOf(Wine("Random Wine", startingPrice, expirationTime)))
+
         shop.next()
-        assertEquals(startingPrice, shop.items[0].price);
+        assertEquals(minimumPrice, shop.items[0].price)
+
         shop.next()
-        assertEquals(startingPrice, shop.items[0].price);
+        assertEquals(minimumPrice, shop.items[0].price)
     }
 
     @Test
@@ -74,12 +93,12 @@ class WineTest {
         val expirationTime = 10
         val wineList: List<Wine> = listOf(Wine("Bourdeaux Conservato", startingPrice, expirationTime),
                                             Wine("Bourgogne Conservato", startingPrice, expirationTime))
-
         val shop = WineShop(wineList)
+
         shop.next()
         for (wine in wineList) {
             assertContains(wine.name, "Conservato");
-            assertEquals(startingPrice + 1, wine.price);
+            assertEquals(startingPrice + defaultPriceIncrease, wine.price);
         }
     }
 
@@ -89,36 +108,38 @@ class WineTest {
         val expirationTime = 10
         val wineList: List<Wine> = listOf(Wine("Bourdeaux Conservato", startingPrice, expirationTime),
             Wine("Bourgogne Conservato", startingPrice, 0))
-
         val shop = WineShop(wineList)
+
         shop.next()
 
         val agingWine: Wine = shop.items[0];
         assertEquals("Bourdeaux Conservato", agingWine.name);
-        assertEquals(startingPrice + 1, agingWine.price);
+        assertEquals(startingPrice + defaultPriceIncrease, agingWine.price);
 
         val expiredAgingWine: Wine = shop.items[1];
         assertEquals("Bourgogne Conservato", expiredAgingWine.name);
-        assertEquals(startingPrice + 2, expiredAgingWine.price);
+        assertEquals(startingPrice + (2 * defaultPriceIncrease), expiredAgingWine.price);
     }
 
     @Test
-    fun `wines cannot increase in price higher than 100`() {
-        val startingPrice = 99
+    fun `wines cannot increase in price higher than maximum price`() {
+        val startingPrice = maximumPrice - defaultPriceDecrease
         val expirationTime = 10
         val shop = WineShop(listOf(Wine("Bourgogne Conservato", startingPrice, expirationTime)))
 
         shop.next()
-        assertEquals(startingPrice + 1, shop.items[0].price);
+        assertEquals(maximumPrice, shop.items[0].price);
+
         shop.next()
-        assertEquals(startingPrice + 1, shop.items[0].price);
+        assertEquals(maximumPrice, shop.items[0].price);
+
         shop.next()
-        assertEquals(startingPrice + 1, shop.items[0].price);
+        assertEquals(maximumPrice, shop.items[0].price);
     }
 
     @Test
-    fun `wines more expensive than 100 should remain in price each passing year`() {
-        val startingPrice = 150
+    fun `aging wines more expensive than maximum price should remain in price each passing year`() {
+        val startingPrice = maximumPrice + 50
         val expirationTime = 10
         val shop = WineShop(listOf(Wine("Bourgogne Conservato", startingPrice, expirationTime)))
 
@@ -131,6 +152,7 @@ class WineTest {
         val startingPrice = 10
         val expirationTime = 10
         val shop = WineShop(listOf(Wine("Wine brewed by Alexander the Great", startingPrice, expirationTime)))
+
         shop.next()
         assertEquals("Wine brewed by Alexander the Great", shop.items[0].name);
         assertEquals(startingPrice, shop.items[0].price)
@@ -145,26 +167,29 @@ class WineTest {
 
         shop.next()
         assertEquals("Event wine", shop.items[0].name);
-        assertEquals(startingPrice + 1, shop.items[0].price)
+        var currentExpectedPrice = startingPrice + defaultPriceIncrease
+        assertEquals(currentExpectedPrice, shop.items[0].price)
         assertEquals(expirationTime - 1, shop.items[0].expiresInYears);
 
         shop.next()
         assertEquals("Event wine", shop.items[0].name);
-        assertEquals(startingPrice + 3, shop.items[0].price)
+        assertEquals(currentExpectedPrice + eventWinePriceIncreaseBetween2And7YearsExpirationDate, shop.items[0].price)
         assertEquals(expirationTime - 2, shop.items[0].expiresInYears);
 
+        
         startingPrice = 10
         expirationTime = 3
         shop = WineShop(listOf(Wine("Event wine", startingPrice, expirationTime)))
 
         shop.next()
         assertEquals("Event wine", shop.items[0].name);
-        assertEquals(startingPrice + 2, shop.items[0].price)
+        currentExpectedPrice = startingPrice + eventWinePriceIncreaseBetween2And7YearsExpirationDate
+        assertEquals(currentExpectedPrice, shop.items[0].price)
         assertEquals(expirationTime - 1, shop.items[0].expiresInYears);
 
         shop.next()
         assertEquals("Event wine", shop.items[0].name);
-        assertEquals(startingPrice + 6, shop.items[0].price)
+        assertEquals(currentExpectedPrice + eventWinePriceIncreaseLessOrEqual2YearsExpirationDate, shop.items[0].price)
         assertEquals(expirationTime - 2, shop.items[0].expiresInYears);
     }
 
@@ -176,7 +201,7 @@ class WineTest {
 
         shop.next()
         assertEquals("Event wine", shop.items[0].name);
-        assertEquals(0, shop.items[0].price)
+        assertEquals(minimumPrice, shop.items[0].price)
     }
 
 
