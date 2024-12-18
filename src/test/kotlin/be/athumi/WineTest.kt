@@ -1,5 +1,13 @@
 package be.athumi
 
+import be.athumi.WineShopUtils.DEFAULT_PRICE_DECREASE
+import be.athumi.WineShopUtils.DEFAULT_PRICE_INCREASE
+import be.athumi.WineShopUtils.EVENT_EXPIRATION_FIRST_BREAKPOINT
+import be.athumi.WineShopUtils.EVENT_EXPIRATION_SECOND_BREAKPOINT
+import be.athumi.WineShopUtils.EVENT_PRICE_INCREASE_FIRST_BREAKPOINT
+import be.athumi.WineShopUtils.EVENT_PRICE_INCREASE_SECOND_BREAKPOINT
+import be.athumi.WineShopUtils.MAX_PRICE
+import be.athumi.WineShopUtils.MIN_PRICE
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import kotlin.test.assertContains
@@ -7,15 +15,15 @@ import kotlin.test.assertEquals
 
 class WineTest {
 
-    val defaultPriceIncrease = WineShop.DEFAULT_PRICE_INCREASE
-    val defaultPriceDecrease = WineShop.DEFAULT_PRICE_DECREASE
-    val minimumPrice = WineShop.MIN_PRICE
-    val maximumPrice = WineShop.MAX_PRICE
+    val defaultPriceIncrease = DEFAULT_PRICE_INCREASE
+    val defaultPriceDecrease = DEFAULT_PRICE_DECREASE
+    val minimumPrice = MIN_PRICE
+    val maximumPrice = MAX_PRICE
 
-    val eventWineFirstBreakpoint = WineShop.EVENT_EXPIRATION_FIRST_BREAKPOINT
-    val eventWinePriceIncreaseFirstBreakpoint = WineShop.EVENT_PRICE_INCREASE_FIRST_BREAKPOINT
-    val eventWineSecondBreakpoint = WineShop.EVENT_EXPIRATION_SECOND_BREAKPOINT
-    val eventWinePriceIncreaseSecondBreakpoint = WineShop.EVENT_PRICE_INCREASE_SECOND_BREAKPOINT
+    val eventWineFirstBreakpoint = EVENT_EXPIRATION_FIRST_BREAKPOINT
+    val eventWinePriceIncreaseFirstBreakpoint = EVENT_PRICE_INCREASE_FIRST_BREAKPOINT
+    val eventWineSecondBreakpoint = EVENT_EXPIRATION_SECOND_BREAKPOINT
+    val eventWinePriceIncreaseSecondBreakpoint = EVENT_PRICE_INCREASE_SECOND_BREAKPOINT
 
     @Test
     fun `tasting or testing wine`() {
