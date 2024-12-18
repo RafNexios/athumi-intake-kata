@@ -16,6 +16,13 @@ class WineShop(var items: List<Wine>) {
     fun next() {
         // Wine Shop logic
         for (wine in items) {
+
+            when(getWineType(wine)) {
+                WineTypeEnum.SPECIAL -> handleSpecialWine(wine)
+                WineTypeEnum.AGING -> handleAgingWine(wine)
+                WineTypeEnum.EVENT -> handleEventWine(wine)
+                WineTypeEnum.DEFAULT -> handleDefaultWine(wine)
+            }
             if (wine.name != "Bourdeaux Conservato" && wine.name != "Bourgogne Conservato" && !wine.name.startsWith("Event")) {
                 if (wine.price > MIN_PRICE) {
                     if (wine.name != "Wine brewed by Alexander the Great") {
@@ -59,6 +66,32 @@ class WineShop(var items: List<Wine>) {
             }
 
             setToMinimumPrice(wine)
+        }
+    }
+
+    private fun handleEventWine(wine: Wine) {
+    }
+
+    private fun handleDefaultWine(wine: Wine) {
+    }
+
+    private fun handleAgingWine(wine: Wine) {
+    }
+
+    private fun handleSpecialWine(wine: Wine) {
+    }
+
+    private fun getWineType(wine: Wine): WineTypeEnum {
+        if (wine.name == "Wine brewed by Alexander the Great") {
+            return WineTypeEnum.SPECIAL
+        } else if (wine.name == "Bourdeaux Conservato" || wine.name == "Bourgogne Conservato") {
+            return WineTypeEnum.AGING
+        } else if (wine.name.contains("Conservato")) {
+            return WineTypeEnum.AGING
+        } else if (wine.name.contains("Event")) {
+            return WineTypeEnum.EVENT
+        } else {
+            return WineTypeEnum.DEFAULT
         }
     }
 
