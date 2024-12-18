@@ -215,6 +215,36 @@ class WineTest {
     }
 
     @Test
+    fun `Eco wine that isn't expired should decrease price twice as fast as a default wine each year`() {
+        val startingPrice = 10
+        val expirationTime = 10
+        val shop = WineShop(listOf(Wine("Eco Wine", startingPrice, expirationTime)))
+
+        shop.next()
+        var currentExpectedPrice = startingPrice - (2 * defaultPriceDecrease)
+        assertEquals(currentExpectedPrice, shop.items[0].price)
+
+        shop.next()
+        currentExpectedPrice -= (2 * defaultPriceDecrease)
+        assertEquals(currentExpectedPrice, shop.items[0].price)
+    }
+
+    @Test
+    fun `Eco wine that is expired should decrease price twice as fast as a default wine each year`() {
+        val startingPrice = 10
+        val expirationTime = 0
+        val shop = WineShop(listOf(Wine("Eco Wine", startingPrice, expirationTime)))
+
+        shop.next()
+        var currentExpectedPrice = startingPrice - (2 * (2 * defaultPriceDecrease))
+        assertEquals(currentExpectedPrice, shop.items[0].price)
+
+        shop.next()
+        currentExpectedPrice -= (2 * (2 * defaultPriceDecrease))
+        assertEquals(currentExpectedPrice, shop.items[0].price)
+    }
+
+    @Test
     fun `testing inventory printouts`() {
 
         // Initial inventory printout 3 years ago
