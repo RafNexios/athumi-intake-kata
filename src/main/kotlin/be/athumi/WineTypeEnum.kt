@@ -16,20 +16,12 @@ enum class WineTypeEnum {
     DEFAULT {
         override fun processWine(wine: Wine) {
             decrementExpiresInYears(wine)
-            if (isWineExpired(wine)) {
-                decreasePrice(wine, 2 * DEFAULT_PRICE_DECREASE)
-            } else {
-                decreasePrice(wine, DEFAULT_PRICE_DECREASE)
-            }
+            decreasePrice(wine, if (isWineExpired(wine)) 2 * DEFAULT_PRICE_DECREASE else DEFAULT_PRICE_DECREASE)
         }
     }, AGING {
         override fun processWine(wine: Wine) {
             decrementExpiresInYears(wine)
-            if (isWineExpired(wine)) {
-                increasePrice(wine, 2 * DEFAULT_PRICE_DECREASE)
-            } else {
-                increasePrice(wine, DEFAULT_PRICE_DECREASE)
-            }
+            increasePrice(wine, if (isWineExpired(wine)) 2 * DEFAULT_PRICE_INCREASE else DEFAULT_PRICE_INCREASE)
         }
     }, EVENT {
         override fun processWine(wine: Wine) {
@@ -52,11 +44,7 @@ enum class WineTypeEnum {
     }, ECO {
         override fun processWine(wine: Wine) {
             decrementExpiresInYears(wine)
-            if (isWineExpired(wine)) {
-                decreasePrice(wine, 2 * 2 * DEFAULT_PRICE_DECREASE)
-            } else {
-                decreasePrice(wine, 2 * DEFAULT_PRICE_DECREASE)
-            }
+            decreasePrice(wine, if (isWineExpired(wine)) 2 * 2 * DEFAULT_PRICE_DECREASE else 2 * DEFAULT_PRICE_DECREASE)
         }
     };
 
