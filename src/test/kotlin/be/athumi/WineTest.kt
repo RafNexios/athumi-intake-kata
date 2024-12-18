@@ -7,11 +7,13 @@ import kotlin.test.assertEquals
 
 class WineTest {
 
-    val defaultPriceIncrease = 1
-    val defaultPriceDecrease = 1
-    val minimumPrice = 0
-    val maximumPrice = 100
+    val defaultPriceIncrease = WineShop.DEFAULT_PRICE_INCREASE
+    val defaultPriceDecrease = WineShop.DEFAULT_PRICE_DECREASE
+    val minimumPrice = WineShop.MIN_PRICE
+    val maximumPrice = WineShop.MAX_PRICE
 
+    val eventWineFirstBreakpoint = WineShop.EVENT_EXPIRATION_FIRST_BREAKPOINT
+    val eventWineSecondBreakpoint = WineShop.EVENT_EXPIRATION_SECOND_BREAKPOINT
     val eventWinePriceIncreaseBetween2And7YearsExpirationDate = 2
     val eventWinePriceIncreaseLessOrEqual2YearsExpirationDate = 4
 
@@ -162,7 +164,7 @@ class WineTest {
     @Test
     fun `event wines should increase in price relative to expiration date`() {
         var startingPrice = 10
-        var expirationTime = 8
+        var expirationTime = eventWineFirstBreakpoint
         var shop = WineShop(listOf(Wine("Event wine", startingPrice, expirationTime)))
 
         shop.next()
@@ -178,7 +180,7 @@ class WineTest {
 
         
         startingPrice = 10
-        expirationTime = 3
+        expirationTime = eventWineSecondBreakpoint
         shop = WineShop(listOf(Wine("Event wine", startingPrice, expirationTime)))
 
         shop.next()

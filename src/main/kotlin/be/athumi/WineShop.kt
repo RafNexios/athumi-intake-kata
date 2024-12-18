@@ -2,13 +2,16 @@ package be.athumi
 
 class WineShop(var items: List<Wine>) {
 
-    val DEFAULT_PRICE_INCREASE = 1
-    val DEFAULT_PRICE_DECREASE = 1
+    companion object {
+        val DEFAULT_PRICE_INCREASE = 1
+        val DEFAULT_PRICE_DECREASE = 1
 
-    val MAX_PRICE = 100
-    val MIN_PRICE = 0
-    val EVENT_EXPIRATION_FIRST_BREAKPOINT = 8
-    val EVENT_EXPIRATION_SECOND_BREAKPOINT = 3
+        val MAX_PRICE = 100
+        val MIN_PRICE = 0
+        val EVENT_EXPIRATION_FIRST_BREAKPOINT = 8
+        val EVENT_EXPIRATION_SECOND_BREAKPOINT = 3
+    }
+
 
     fun next() {
         // Wine Shop logic
