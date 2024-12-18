@@ -8,8 +8,10 @@ class WineShop(var items: List<Wine>) {
 
         val MAX_PRICE = 100
         val MIN_PRICE = 0
-        val EVENT_EXPIRATION_FIRST_BREAKPOINT = 8
-        val EVENT_EXPIRATION_SECOND_BREAKPOINT = 3
+        val EVENT_EXPIRATION_FIRST_BREAKPOINT = 7
+        val EVENT_PRICE_INCREASE_FIRST_BREAKPOINT = 2
+        val EVENT_EXPIRATION_SECOND_BREAKPOINT = 2
+        val EVENT_PRICE_INCREASE_SECOND_BREAKPOINT = 4
     }
 
 
@@ -23,62 +25,46 @@ class WineShop(var items: List<Wine>) {
                 WineTypeEnum.EVENT -> handleEventWine(wine)
                 WineTypeEnum.DEFAULT -> handleDefaultWine(wine)
             }
-            if (wine.name != "Bourdeaux Conservato" && wine.name != "Bourgogne Conservato" && !wine.name.startsWith("Event")) {
-                if (wine.price > MIN_PRICE) {
-                    if (wine.name != "Wine brewed by Alexander the Great") {
-                        decreasePrice(wine, DEFAULT_PRICE_DECREASE)
-                    }
-                }
-            } else {
-                if (wine.price < MAX_PRICE) {
-                    increasePrice(wine, DEFAULT_PRICE_INCREASE)
-
-                    if (wine.name.startsWith("Event")) {
-                        if (wine.expiresInYears < EVENT_EXPIRATION_FIRST_BREAKPOINT) {
-                            increasePrice(wine, DEFAULT_PRICE_INCREASE)
-                        }
-
-                        if (wine.expiresInYears < EVENT_EXPIRATION_SECOND_BREAKPOINT) {
-                            increasePrice(wine, 2 * DEFAULT_PRICE_INCREASE)
-                        }
-                    }
-                }
+            if (wine.price < MIN_PRICE) {
+                setToMinimumPrice(wine)
             }
-
-            if (wine.name != "Wine brewed by Alexander the Great") {
-                wine.expiresInYears = wine.expiresInYears - 1
-            } else setToMinimumPrice(wine)
-
-            if (wine.expiresInYears < 0) {
-                if (!wine.name.contains("Conservato")) {
-                    if (!wine.name.contains("Event")) {
-                        if (wine.price > MIN_PRICE) {
-                            if (wine.name != "Wine brewed by Alexander the Great") {
-                                decreasePrice(wine, DEFAULT_PRICE_DECREASE)
-                            }
-                        }
-                    } else {
-                        wine.price = 0
-                    }
-                } else {
-                    increasePrice(wine, DEFAULT_PRICE_INCREASE)
-                }
-            }
-
-            setToMinimumPrice(wine)
         }
     }
 
     private fun handleEventWine(wine: Wine) {
+        wine.expiresInYears -= 1
+        if (wine.expiresInYears < EVENT_EXPIRATION_SECOND_BREAKPOINT) {
+            increasePrice(wine, EVENT_PRICE_INCREASE_SECOND_BREAKPOINT)
+        } else if (wine.expiresInYears < EVENT_EXPIRATION_FIRST_BREAKPOINT) {
+            increasePrice(wine, EVENT_PRICE_INCREASE_FIRST_BREAKPOINT)
+        } else {
+            increasePrice(wine, DEFAULT_PRICE_INCREASE)
+        }
+
+        if (wine.expiresInYears < 0) setToMinimumPrice(wine)
     }
 
     private fun handleDefaultWine(wine: Wine) {
+        wine.expiresInYears -= 1
+        if (wine.expiresInYears < 0) {
+            decreasePrice(wine, 2 * DEFAULT_PRICE_DECREASE)
+        } else {
+            decreasePrice(wine, DEFAULT_PRICE_DECREASE)
+        }
     }
 
     private fun handleAgingWine(wine: Wine) {
+        wine.expiresInYears -= 1
+        if (wine.expiresInYears < 0) {
+            increasePrice(wine, 2 * DEFAULT_PRICE_DECREASE)
+        } else {
+            increasePrice(wine, DEFAULT_PRICE_DECREASE)
+        }
     }
 
     private fun handleSpecialWine(wine: Wine) {
+        // Nothing needs to happen with special wines yet
+        return
     }
 
     private fun getWineType(wine: Wine): WineTypeEnum {
@@ -96,9 +82,7 @@ class WineShop(var items: List<Wine>) {
     }
 
     private fun setToMinimumPrice(wine: Wine) {
-        if (wine.price < MIN_PRICE) {
-            wine.price = MIN_PRICE
-        }
+        wine.price = MIN_PRICE
     }
 
     private fun increasePrice(wine: Wine, amount: Int) {

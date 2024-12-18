@@ -13,9 +13,9 @@ class WineTest {
     val maximumPrice = WineShop.MAX_PRICE
 
     val eventWineFirstBreakpoint = WineShop.EVENT_EXPIRATION_FIRST_BREAKPOINT
+    val eventWinePriceIncreaseFirstBreakpoint = WineShop.EVENT_PRICE_INCREASE_FIRST_BREAKPOINT
     val eventWineSecondBreakpoint = WineShop.EVENT_EXPIRATION_SECOND_BREAKPOINT
-    val eventWinePriceIncreaseBetween2And7YearsExpirationDate = 2
-    val eventWinePriceIncreaseLessOrEqual2YearsExpirationDate = 4
+    val eventWinePriceIncreaseSecondBreakpoint = WineShop.EVENT_PRICE_INCREASE_SECOND_BREAKPOINT
 
     @Test
     fun `tasting or testing wine`() {
@@ -164,7 +164,7 @@ class WineTest {
     @Test
     fun `event wines should increase in price relative to expiration date`() {
         var startingPrice = 10
-        var expirationTime = eventWineFirstBreakpoint
+        var expirationTime = eventWineFirstBreakpoint + 1
         var shop = WineShop(listOf(Wine("Event wine", startingPrice, expirationTime)))
 
         shop.next()
@@ -175,23 +175,23 @@ class WineTest {
 
         shop.next()
         assertEquals("Event wine", shop.items[0].name);
-        assertEquals(currentExpectedPrice + eventWinePriceIncreaseBetween2And7YearsExpirationDate, shop.items[0].price)
+        assertEquals(currentExpectedPrice + eventWinePriceIncreaseFirstBreakpoint, shop.items[0].price)
         assertEquals(expirationTime - 2, shop.items[0].expiresInYears);
 
         
         startingPrice = 10
-        expirationTime = eventWineSecondBreakpoint
+        expirationTime = eventWineSecondBreakpoint + 1
         shop = WineShop(listOf(Wine("Event wine", startingPrice, expirationTime)))
 
         shop.next()
         assertEquals("Event wine", shop.items[0].name);
-        currentExpectedPrice = startingPrice + eventWinePriceIncreaseBetween2And7YearsExpirationDate
+        currentExpectedPrice = startingPrice + eventWinePriceIncreaseFirstBreakpoint
         assertEquals(currentExpectedPrice, shop.items[0].price)
         assertEquals(expirationTime - 1, shop.items[0].expiresInYears);
 
         shop.next()
         assertEquals("Event wine", shop.items[0].name);
-        assertEquals(currentExpectedPrice + eventWinePriceIncreaseLessOrEqual2YearsExpirationDate, shop.items[0].price)
+        assertEquals(currentExpectedPrice + eventWinePriceIncreaseSecondBreakpoint, shop.items[0].price)
         assertEquals(expirationTime - 2, shop.items[0].expiresInYears);
     }
 
