@@ -206,5 +206,49 @@ class WineTest {
         assertEquals(minimumPrice, shop.items[0].price)
     }
 
+    @Test
+    fun `testing inventory printouts`() {
+
+        // Initial inventory printout 3 years ago
+        val shop = WineShop(listOf(Wine("Standard Wine", 20, 10),
+            Wine("Bourdeaux Conservato", 0, 2),
+            Wine("Another Standard Wine", 7, 5),
+            Wine("Wine brewed by Alexander the Great", 150, 0),
+            Wine("Wine brewed by Alexander the Great", 80, 10),
+            Wine("Event Wine", 20, 15),
+            Wine("Event Wine", 49, 10),
+            Wine("Event Wine", 49, 5),
+            Wine("Eco Brilliant Wine", 6, 3)))
+
+        // Simulating the passing 3 years
+        shop.next()
+        shop.next()
+        shop.next()
+
+        // Checking that everything is as the inventory printout suggests
+        verifyOutput(shop.items[0].name, "Standard Wine", shop.items[0].price, 17, shop.items[0].expiresInYears, 7)
+        verifyOutput(shop.items[1].name, "Bourdeaux Conservato", shop.items[1].price, 4, shop.items[1].expiresInYears, -1)
+        verifyOutput(shop.items[2].name, "Another Standard Wine", shop.items[2].price, 4, shop.items[2].expiresInYears, 2)
+        verifyOutput(shop.items[3].name, "Wine brewed by Alexander the Great", shop.items[3].price, 150, shop.items[3].expiresInYears, 0)
+        verifyOutput(shop.items[4].name, "Wine brewed by Alexander the Great", shop.items[4].price, 80, shop.items[4].expiresInYears, 10)
+        verifyOutput(shop.items[5].name, "Event Wine", shop.items[5].price, 23, shop.items[5].expiresInYears, 12)
+        verifyOutput(shop.items[6].name, "Event Wine", shop.items[6].price, 52, shop.items[6].expiresInYears, 7)
+        verifyOutput(shop.items[7].name, "Event Wine", shop.items[7].price, 55, shop.items[7].expiresInYears, 2)
+        verifyOutput(shop.items[8].name, "Eco Brilliant Wine", shop.items[8].price, 3, shop.items[8].expiresInYears, 0)
+    }
+
+    private fun verifyOutput(
+        wineName: String,
+        expectedName: String,
+        winePrice: Int,
+        expectedPrice: Int,
+        wineExpirationDate: Int,
+        expectedExpirationDate: Int
+    ) {
+        assertEquals(wineName, expectedName)
+        assertEquals(winePrice, expectedPrice)
+        assertEquals(wineExpirationDate, expectedExpirationDate)
+    }
+
 
 }
