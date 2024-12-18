@@ -15,59 +15,59 @@ class WineShop(var items: List<Wine>) {
 
     fun next() {
         // Wine Shop logic
-        for (i in items.indices) {
-            if (items[i].name != "Bourdeaux Conservato" && items[i].name != "Bourgogne Conservato" && !items[i].name.startsWith("Event")) {
-                if (items[i].price > MIN_PRICE) {
-                    if (items[i].name != "Wine brewed by Alexander the Great") {
-                        items[i].price = items[i].price - DEFAULT_PRICE_DECREASE
+        for (wine in items) {
+            if (wine.name != "Bourdeaux Conservato" && wine.name != "Bourgogne Conservato" && !wine.name.startsWith("Event")) {
+                if (wine.price > MIN_PRICE) {
+                    if (wine.name != "Wine brewed by Alexander the Great") {
+                        wine.price = wine.price - DEFAULT_PRICE_DECREASE
                     }
                 }
             } else {
-                if (items[i].price < MAX_PRICE) {
-                    items[i].price = items[i].price + DEFAULT_PRICE_INCREASE
+                if (wine.price < MAX_PRICE) {
+                    wine.price = wine.price + DEFAULT_PRICE_INCREASE
 
-                    if (items[i].name.startsWith("Event")) {
-                        if (items[i].expiresInYears < EVENT_EXPIRATION_FIRST_BREAKPOINT) {
-                            if (items[i].price < MAX_PRICE) {
-                                items[i].price = items[i].price + DEFAULT_PRICE_INCREASE
+                    if (wine.name.startsWith("Event")) {
+                        if (wine.expiresInYears < EVENT_EXPIRATION_FIRST_BREAKPOINT) {
+                            if (wine.price < MAX_PRICE) {
+                                wine.price = wine.price + DEFAULT_PRICE_INCREASE
                             }
                         }
 
-                        if (items[i].expiresInYears < EVENT_EXPIRATION_SECOND_BREAKPOINT) {
-                            if (items[i].price < MAX_PRICE) {
-                                items[i].price = items[i].price + (2 * DEFAULT_PRICE_INCREASE)
+                        if (wine.expiresInYears < EVENT_EXPIRATION_SECOND_BREAKPOINT) {
+                            if (wine.price < MAX_PRICE) {
+                                wine.price = wine.price + (2 * DEFAULT_PRICE_INCREASE)
                             }
                         }
                     }
                 }
             }
 
-            if (items[i].name != "Wine brewed by Alexander the Great") {
-                items[i].expiresInYears = items[i].expiresInYears - 1
-            } else if (items[i].price < MIN_PRICE) {
-                items[i].price = MIN_PRICE
+            if (wine.name != "Wine brewed by Alexander the Great") {
+                wine.expiresInYears = wine.expiresInYears - 1
+            } else if (wine.price < MIN_PRICE) {
+                wine.price = MIN_PRICE
             }
 
-            if (items[i].expiresInYears < 0) {
-                if (!items[i].name.contains("Conservato")) {
-                    if (!items[i].name.contains("Event")) {
-                        if (items[i].price > MIN_PRICE) {
-                            if (items[i].name != "Wine brewed by Alexander the Great") {
-                                items[i].price = items[i].price - DEFAULT_PRICE_DECREASE
+            if (wine.expiresInYears < 0) {
+                if (!wine.name.contains("Conservato")) {
+                    if (!wine.name.contains("Event")) {
+                        if (wine.price > MIN_PRICE) {
+                            if (wine.name != "Wine brewed by Alexander the Great") {
+                                wine.price = wine.price - DEFAULT_PRICE_DECREASE
                             }
                         }
                     } else {
-                        items[i].price = 0
+                        wine.price = 0
                     }
                 } else {
-                    if (items[i].price < MAX_PRICE) {
-                        items[i].price = items[i].price + DEFAULT_PRICE_INCREASE
+                    if (wine.price < MAX_PRICE) {
+                        wine.price = wine.price + DEFAULT_PRICE_INCREASE
                     }
                 }
             }
 
-            if (items[i].price < MIN_PRICE) {
-                items[i].price = MIN_PRICE
+            if (wine.price < MIN_PRICE) {
+                wine.price = MIN_PRICE
             }
         }
     }
