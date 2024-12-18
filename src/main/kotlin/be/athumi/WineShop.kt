@@ -19,24 +19,20 @@ class WineShop(var items: List<Wine>) {
             if (wine.name != "Bourdeaux Conservato" && wine.name != "Bourgogne Conservato" && !wine.name.startsWith("Event")) {
                 if (wine.price > MIN_PRICE) {
                     if (wine.name != "Wine brewed by Alexander the Great") {
-                        wine.price = wine.price - DEFAULT_PRICE_DECREASE
+                        decreasePrice(wine, DEFAULT_PRICE_DECREASE)
                     }
                 }
             } else {
                 if (wine.price < MAX_PRICE) {
-                    wine.price = wine.price + DEFAULT_PRICE_INCREASE
+                    increasePrice(wine, DEFAULT_PRICE_INCREASE)
 
                     if (wine.name.startsWith("Event")) {
                         if (wine.expiresInYears < EVENT_EXPIRATION_FIRST_BREAKPOINT) {
-                            if (wine.price < MAX_PRICE) {
-                                wine.price = wine.price + DEFAULT_PRICE_INCREASE
-                            }
+                            increasePrice(wine, DEFAULT_PRICE_INCREASE)
                         }
 
                         if (wine.expiresInYears < EVENT_EXPIRATION_SECOND_BREAKPOINT) {
-                            if (wine.price < MAX_PRICE) {
-                                wine.price = wine.price + (2 * DEFAULT_PRICE_INCREASE)
-                            }
+                            increasePrice(wine, 2 * DEFAULT_PRICE_INCREASE)
                         }
                     }
                 }
@@ -44,31 +40,43 @@ class WineShop(var items: List<Wine>) {
 
             if (wine.name != "Wine brewed by Alexander the Great") {
                 wine.expiresInYears = wine.expiresInYears - 1
-            } else if (wine.price < MIN_PRICE) {
-                wine.price = MIN_PRICE
-            }
+            } else setToMinimumPrice(wine)
 
             if (wine.expiresInYears < 0) {
                 if (!wine.name.contains("Conservato")) {
                     if (!wine.name.contains("Event")) {
                         if (wine.price > MIN_PRICE) {
                             if (wine.name != "Wine brewed by Alexander the Great") {
-                                wine.price = wine.price - DEFAULT_PRICE_DECREASE
+                                decreasePrice(wine, DEFAULT_PRICE_DECREASE)
                             }
                         }
                     } else {
                         wine.price = 0
                     }
                 } else {
-                    if (wine.price < MAX_PRICE) {
-                        wine.price = wine.price + DEFAULT_PRICE_INCREASE
-                    }
+                    increasePrice(wine, DEFAULT_PRICE_INCREASE)
                 }
             }
 
-            if (wine.price < MIN_PRICE) {
-                wine.price = MIN_PRICE
-            }
+            setToMinimumPrice(wine)
+        }
+    }
+
+    private fun setToMinimumPrice(wine: Wine) {
+        if (wine.price < MIN_PRICE) {
+            wine.price = MIN_PRICE
+        }
+    }
+
+    private fun increasePrice(wine: Wine, amount: Int) {
+        if (wine.price < MAX_PRICE) {
+            wine.price = wine.price + amount
+        }
+    }
+
+    private fun decreasePrice(wine: Wine, amount: Int) {
+        if (wine.price > MIN_PRICE) {
+            wine.price = wine.price - amount
         }
     }
 }
