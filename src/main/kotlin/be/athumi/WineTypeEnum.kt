@@ -49,6 +49,15 @@ enum class WineTypeEnum {
             // Nothing needs to happen with special wines yet
             return
         }
+    }, ECO {
+        override fun processWine(wine: Wine) {
+            decrementExpiresInYears(wine)
+            if (isWineExpired(wine)) {
+                decreasePrice(wine, 2 * 2 * DEFAULT_PRICE_DECREASE)
+            } else {
+                decreasePrice(wine, 2 * DEFAULT_PRICE_DECREASE)
+            }
+        }
     };
 
     abstract fun processWine(wine: Wine)
@@ -63,6 +72,8 @@ enum class WineTypeEnum {
                 AGING
             } else if (wine.name.contains("Event")) {
                 EVENT
+            } else if (wine.name.contains("Eco")) {
+                ECO
             } else {
                 DEFAULT
             }

@@ -242,7 +242,7 @@ class WineTest {
         verifyOutput(shop.items[5].name, "Event Wine", shop.items[5].price, 23, shop.items[5].expiresInYears, 12)
         verifyOutput(shop.items[6].name, "Event Wine", shop.items[6].price, 52, shop.items[6].expiresInYears, 7)
         verifyOutput(shop.items[7].name, "Event Wine", shop.items[7].price, 55, shop.items[7].expiresInYears, 2)
-        verifyOutput(shop.items[8].name, "Eco Brilliant Wine", shop.items[8].price, 3, shop.items[8].expiresInYears, 0)
+        verifyOutput(shop.items[8].name, "Eco Brilliant Wine", shop.items[8].price, 0, shop.items[8].expiresInYears, 0)
     }
 
     private fun verifyOutput(
