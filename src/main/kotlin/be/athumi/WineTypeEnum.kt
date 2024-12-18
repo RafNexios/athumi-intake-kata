@@ -13,7 +13,7 @@ import be.athumi.WineShopUtils.isWineExpired
 import be.athumi.WineShopUtils.setToMinimumPrice
 
 enum class WineTypeEnum {
-    DEFAULT{
+    DEFAULT {
         override fun processWine(wine: Wine) {
             decrementExpiresInYears(wine)
             if (isWineExpired(wine)) {
@@ -52,4 +52,20 @@ enum class WineTypeEnum {
     };
 
     abstract fun processWine(wine: Wine)
+
+    companion object{
+        fun getWineType(wine: Wine): WineTypeEnum {
+            return if (wine.name == "Wine brewed by Alexander the Great") {
+                SPECIAL
+            } else if (wine.name == "Bourdeaux Conservato" || wine.name == "Bourgogne Conservato") {
+                AGING
+            } else if (wine.name.contains("Conservato")) {
+                AGING
+            } else if (wine.name.contains("Event")) {
+                EVENT
+            } else {
+                DEFAULT
+            }
+        }
+    }
 }
