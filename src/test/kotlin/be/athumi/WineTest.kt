@@ -148,13 +148,13 @@ class WineTest {
     }
 
     @Test
-    fun `aging wines more expensive than maximum price should remain in price each passing year`() {
+    fun `aging wines more expensive than maximum price are set to the maximum price after a year`() {
         val startingPrice = maximumPrice + 50
         val expirationTime = 10
         val shop = WineShop(listOf(Wine("Bourgogne Conservato", startingPrice, expirationTime)))
 
         shop.next()
-        assertEquals(startingPrice, shop.items[0].price);
+        assertEquals(maximumPrice, shop.items[0].price);
     }
 
     @Test
@@ -212,6 +212,17 @@ class WineTest {
         shop.next()
         assertEquals("Event wine", shop.items[0].name);
         assertEquals(minimumPrice, shop.items[0].price)
+    }
+
+    @Test
+    fun `event wine should be max priced at the current configured max price`() {
+        var startingPrice = 99
+        var expirationTime = 2
+        var shop = WineShop(listOf(Wine("Event wine", startingPrice, expirationTime)))
+
+        shop.next()
+        assertEquals("Event wine", shop.items[0].name);
+        assertEquals(maximumPrice, shop.items[0].price)
     }
 
     @Test

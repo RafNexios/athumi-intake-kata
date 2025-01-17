@@ -15,6 +15,7 @@ object WineShopUtils {
 
     fun increasePrice(wine: Wine, amount: Int) {
         if (wine.price < MAX_PRICE) wine.price += amount
+        if (wine.price >= MAX_PRICE) wine.price = MAX_PRICE
     }
 
     fun decreasePrice(wine: Wine, amount: Int) {
